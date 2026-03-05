@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './database/db.js';
@@ -15,12 +16,29 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000');
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-this';
+const APP_URL = process.env.APP_URL || `http://localhost:${PORT}`;
 
 app.use(cors());
 app.use(express.json());
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+
 interface AuthRequest extends Request {
   user?: { id: number; email: string; name: string };
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function validateEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function generateTrackingNumber() {
+  return `FL${Date.now().toString().slice(-6)}${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+function generateToken() {
+  return crypto.randomBytes(32).toString('hex');
 }
 
 function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
@@ -32,46 +50,224 @@ function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) 
   } catch { res.status(403).json({ success: false, message: 'Invalid or expired token' }); }
 }
 
-function generateTrackingNumber(): string {
-  return `FL${Date.now().toString().slice(-6)}${Math.floor(1000 + Math.random() * 9000)}`;
+// ─── Email Transporter ────────────────────────────────────────────────────────
+
+function getTransporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+  });
 }
 
-function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+async function sendEmail(to: string, subject: string, html: string) {
+  if (!process.env.EMAIL_USER || process.env.EMAIL_USER.includes('your-gmail')) {
+    console.log(`📧 Email skipped (no config) — To: ${to} | Subject: ${subject}`);
+    return;
+  }
+  await getTransporter().sendMail({ from: `"Fed Logistics" <${process.env.EMAIL_USER}>`, to, subject, html });
 }
 
-// SIGNUP
+// ─── EMAIL TEMPLATES ─────────────────────────────────────────────────────────
+
+function verificationEmailHTML(name: string, link: string) {
+  return `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: #4D148C; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+      <h1 style="color: white; margin: 0;">FED <span style="color: #FF6200;">LOGISTICS</span></h1>
+    </div>
+    <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #eee;">
+      <h2 style="color: #1a1a2e;">Hello ${name}! 👋</h2>
+      <p style="color: #555; font-size: 16px;">Thank you for signing up. Please verify your email address to activate your account.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${link}" style="background: #FF6200; color: white; padding: 14px 32px; border-radius: 25px; text-decoration: none; font-size: 16px; font-weight: bold;">
+          ✅ Verify My Email
+        </a>
+      </div>
+      <p style="color: #999; font-size: 13px; text-align: center;">This link expires in <strong>24 hours</strong>. If you didn't sign up, ignore this email.</p>
+    </div>
+  </div>`;
+}
+
+function passwordResetEmailHTML(name: string, link: string) {
+  return `
+  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: #4D148C; padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+      <h1 style="color: white; margin: 0;">FED <span style="color: #FF6200;">LOGISTICS</span></h1>
+    </div>
+    <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #eee;">
+      <h2 style="color: #1a1a2e;">Password Reset Request 🔐</h2>
+      <p style="color: #555; font-size: 16px;">Hi ${name}, we received a request to reset your password.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${link}" style="background: #4D148C; color: white; padding: 14px 32px; border-radius: 25px; text-decoration: none; font-size: 16px; font-weight: bold;">
+          🔑 Reset My Password
+        </a>
+      </div>
+      <p style="color: #999; font-size: 13px; text-align: center;">This link expires in <strong>1 hour</strong>. If you didn't request this, ignore this email — your password is safe.</p>
+    </div>
+  </div>`;
+}
+
+// ─── SIGNUP ───────────────────────────────────────────────────────────────────
+
 app.post('/api/auth/signup', async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) { res.status(400).json({ success: false, message: 'All fields are required' }); return; }
   if (!validateEmail(email)) { res.status(400).json({ success: false, message: 'Invalid email address' }); return; }
   if (password.length < 8) { res.status(400).json({ success: false, message: 'Password must be at least 8 characters' }); return; }
+
   try {
     if (db.prepare('SELECT id FROM users WHERE email = ?').get(email)) {
       res.status(400).json({ success: false, message: 'An account with this email already exists' }); return;
     }
+
     const password_hash = await bcrypt.hash(password, 10);
-    const result = db.prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)').run(name, email, password_hash);
-    const token = jwt.sign({ id: result.lastInsertRowid, email, name }, JWT_SECRET, { expiresIn: '7d' });
-    res.json({ success: true, token, user: { id: result.lastInsertRowid, name, email } });
-  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+    const verification_token = generateToken();
+    const verification_expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    const result = db.prepare(
+      'INSERT INTO users (name, email, password_hash, is_verified, verification_token, verification_expires) VALUES (?, ?, ?, 0, ?, ?)'
+    ).run(name, email, password_hash, verification_token, verification_expires);
+
+    // Send verification email
+    const verifyLink = `${APP_URL}/api/auth/verify-email?token=${verification_token}`;
+    await sendEmail(email, 'Verify your Fed Logistics account', verificationEmailHTML(name, verifyLink));
+
+    res.json({ success: true, message: 'Account created! Please check your email to verify your account before logging in.' });
+  } catch (err) {
+    console.error('Signup error:', err);
+    res.status(500).json({ success: false, message: 'Server error during signup' });
+  }
 });
 
-// LOGIN
+// ─── VERIFY EMAIL ─────────────────────────────────────────────────────────────
+
+app.get('/api/auth/verify-email', (req, res) => {
+  const { token } = req.query;
+  if (!token) { res.status(400).send(renderPage('Invalid Link', '❌ Invalid verification link.')); return; }
+
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE verification_token = ?').get(token) as any;
+    if (!user) { res.send(renderPage('Already Verified', '✅ Your email is already verified! <a href="/login">Log in here</a>')); return; }
+    if (new Date(user.verification_expires) < new Date()) {
+      res.send(renderPage('Link Expired', '⏰ This verification link has expired. Please sign up again or contact support.')); return;
+    }
+    db.prepare('UPDATE users SET is_verified = 1, verification_token = NULL, verification_expires = NULL WHERE id = ?').run(user.id);
+    res.send(renderPage('Email Verified! ✅', `
+      <p>Your email has been verified successfully!</p>
+      <a href="/login" style="background:#FF6200;color:white;padding:12px 28px;border-radius:25px;text-decoration:none;font-weight:bold;display:inline-block;margin-top:16px;">
+        Log In Now
+      </a>
+    `));
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(renderPage('Error', 'Something went wrong. Please try again.'));
+  }
+});
+
+// ─── RESEND VERIFICATION ──────────────────────────────────────────────────────
+
+app.post('/api/auth/resend-verification', async (req, res) => {
+  const { email } = req.body;
+  if (!email) { res.status(400).json({ success: false, message: 'Email is required' }); return; }
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
+    if (!user) { res.status(404).json({ success: false, message: 'No account found with this email' }); return; }
+    if (user.is_verified) { res.json({ success: false, message: 'This email is already verified' }); return; }
+
+    const verification_token = generateToken();
+    const verification_expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    db.prepare('UPDATE users SET verification_token = ?, verification_expires = ? WHERE id = ?').run(verification_token, verification_expires, user.id);
+
+    const verifyLink = `${APP_URL}/api/auth/verify-email?token=${verification_token}`;
+    await sendEmail(email, 'Verify your Fed Logistics account', verificationEmailHTML(user.name, verifyLink));
+
+    res.json({ success: true, message: 'Verification email resent! Check your inbox.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// ─── LOGIN ────────────────────────────────────────────────────────────────────
+
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) { res.status(400).json({ success: false, message: 'Email and password required' }); return; }
+  if (!email || !password) { res.status(400).json({ success: false, message: 'Email and password are required' }); return; }
   try {
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
       res.status(401).json({ success: false, message: 'Invalid email or password' }); return;
     }
+    if (!user.is_verified) {
+      res.status(403).json({ success: false, message: 'Please verify your email first. Check your inbox or resend the verification email.', notVerified: true }); return;
+    }
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email } });
-  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
-// TRACK
+// ─── FORGOT PASSWORD ──────────────────────────────────────────────────────────
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) { res.status(400).json({ success: false, message: 'Email is required' }); return; }
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
+    // Always return success to prevent email enumeration
+    if (!user) { res.json({ success: true, message: 'If an account exists, a reset email has been sent.' }); return; }
+
+    const reset_token = generateToken();
+    const reset_expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+    db.prepare('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?').run(reset_token, reset_expires, user.id);
+
+    const resetLink = `${APP_URL}/reset-password?token=${reset_token}`;
+    await sendEmail(email, 'Reset your Fed Logistics password', passwordResetEmailHTML(user.name, resetLink));
+
+    res.json({ success: true, message: 'If an account exists, a reset email has been sent.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// ─── RESET PASSWORD ───────────────────────────────────────────────────────────
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) { res.status(400).json({ success: false, message: 'Token and new password are required' }); return; }
+  if (password.length < 8) { res.status(400).json({ success: false, message: 'Password must be at least 8 characters' }); return; }
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE reset_token = ?').get(token) as any;
+    if (!user) { res.status(400).json({ success: false, message: 'Invalid or expired reset link' }); return; }
+    if (new Date(user.reset_expires) < new Date()) {
+      res.status(400).json({ success: false, message: 'This reset link has expired. Please request a new one.' }); return;
+    }
+    const password_hash = await bcrypt.hash(password, 10);
+    db.prepare('UPDATE users SET password_hash = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?').run(password_hash, user.id);
+    res.json({ success: true, message: 'Password reset successfully! You can now log in.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// ─── VALIDATE RESET TOKEN ─────────────────────────────────────────────────────
+
+app.get('/api/auth/validate-reset-token', (req, res) => {
+  const { token } = req.query;
+  if (!token) { res.status(400).json({ valid: false }); return; }
+  const user = db.prepare('SELECT * FROM users WHERE reset_token = ?').get(token) as any;
+  if (!user || new Date(user.reset_expires) < new Date()) {
+    res.json({ valid: false }); return;
+  }
+  res.json({ valid: true });
+});
+
+// ─── TRACK ────────────────────────────────────────────────────────────────────
+
 app.post('/api/track', (req, res) => {
   const { trackingNumber } = req.body;
   if (!trackingNumber) { res.status(400).json({ success: false, message: 'Tracking number is required' }); return; }
@@ -88,7 +284,8 @@ app.post('/api/track', (req, res) => {
   } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
 });
 
-// QUOTE
+// ─── QUOTE ────────────────────────────────────────────────────────────────────
+
 app.post('/api/quote', (req, res) => {
   const { from, to, weight, service } = req.body;
   if (!from || !to || !weight || !service) { res.status(400).json({ success: false, message: 'All fields required' }); return; }
@@ -96,7 +293,8 @@ app.post('/api/quote', (req, res) => {
   setTimeout(() => res.json({ success: true, price: total.toFixed(2) }), 500);
 });
 
-// SHIP CREATE (protected)
+// ─── SHIP CREATE (protected) ──────────────────────────────────────────────────
+
 app.post('/api/ship/create', authenticateToken, (req: AuthRequest, res) => {
   const { from, to, weight, service, price } = req.body;
   if (!from || !to || !weight || !service) { res.status(400).json({ success: false, message: 'All fields required' }); return; }
@@ -116,7 +314,8 @@ app.post('/api/ship/create', authenticateToken, (req: AuthRequest, res) => {
   } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Error creating shipment' }); }
 });
 
-// MY SHIPMENTS (protected)
+// ─── MY SHIPMENTS (protected) ─────────────────────────────────────────────────
+
 app.get('/api/shipments/my', authenticateToken, (req: AuthRequest, res) => {
   try {
     const shipments = db.prepare('SELECT * FROM shipments WHERE user_id = ? ORDER BY created_at DESC').all(req.user!.id) as any[];
@@ -129,22 +328,31 @@ app.get('/api/shipments/my', authenticateToken, (req: AuthRequest, res) => {
   } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
 });
 
-// CONTACT
+// ─── CONTACT ──────────────────────────────────────────────────────────────────
+
 app.post('/api/contact', async (req, res) => {
   const { name, email, subject, message } = req.body;
   if (!name || !email || !subject || !message) { res.status(400).json({ success: false, message: 'All fields are required' }); return; }
   if (!validateEmail(email)) { res.status(400).json({ success: false, message: 'Invalid email address' }); return; }
   try {
     db.prepare('INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)').run(name, email, subject, message);
-    if (process.env.EMAIL_USER && !process.env.EMAIL_USER.includes('your-gmail')) {
-      const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS } });
-      await transporter.sendMail({ from: process.env.EMAIL_USER, to: process.env.EMAIL_TO || process.env.EMAIL_USER, subject: `[Fed Logistics] ${subject}`, html: `<h2>Contact Form</h2><p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Message:</b></p><p>${message}</p>` });
-    }
+    await sendEmail(process.env.EMAIL_TO || process.env.EMAIL_USER || '', `[Fed Logistics] ${subject}`, `<h2>Contact Form</h2><p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Message:</b></p><p>${message}</p>`);
     res.json({ success: true, message: "Message received. We'll get back to you within 24 hours." });
   } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Error sending message' }); }
 });
 
-// START SERVER
+// ─── Helper: HTML page for email verification responses ──────────────────────
+
+function renderPage(title: string, content: string) {
+  return `<!DOCTYPE html><html><head><title>${title} — Fed Logistics</title>
+  <style>body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f8f8;}
+  .card{background:white;padding:48px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);text-align:center;max-width:480px;}
+  h1{color:#4D148C;} p{color:#555;font-size:16px;} a{color:#FF6200;}</style></head>
+  <body><div class="card"><h1>${title}</h1>${content}<br><br><a href="/">← Back to Fed Logistics</a></div></body></html>`;
+}
+
+// ─── START SERVER ─────────────────────────────────────────────────────────────
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({ server: { middlewareMode: true }, appType: 'spa' });
@@ -154,9 +362,71 @@ async function startServer() {
     app.get('*', (_req, res) => res.sendFile(path.join(__dirname, 'dist', 'index.html')));
   }
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Fed Logistics running → http://localhost:${PORT}`);
-    console.log(`📦 Database: ${process.env.DB_PATH || './database/logistics.db'}`);
+    console.log(`🚀 Fed Logistics → http://localhost:${PORT}`);
+    console.log(`📧 Email: ${process.env.EMAIL_USER || 'not configured'}`);
   });
 }
 
 startServer();
+
+// ─── FORGOT PASSWORD ──────────────────────────────────────────────────────────
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) { res.status(400).json({ success: false, message: 'Email is required' }); return; }
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email) as any;
+    // Always return success to prevent email enumeration
+    if (!user) {
+      res.json({ success: true, message: 'If an account exists with this email, a reset link has been sent.' });
+      return;
+    }
+    const resetToken = require('crypto').randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 3600000).toISOString(); // 1 hour
+    db.prepare('UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?').run(resetToken, expiry, user.id);
+    const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+    const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
+    if (process.env.EMAIL_USER && !process.env.EMAIL_USER.includes('your-gmail')) {
+      const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS } });
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'Reset Your Fed Logistics Password',
+        html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:32px;background:#f8f8f8;">
+          <div style="background:white;padding:40px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+            <h1 style="color:#4D148C;margin-bottom:8px;">Password Reset Request</h1>
+            <p style="color:#555;">Hi ${user.name},</p>
+            <p style="color:#555;">We received a request to reset your Fed Logistics password. Click the button below to set a new password. This link expires in <strong>1 hour</strong>.</p>
+            <div style="text-align:center;margin:32px 0;">
+              <a href="${resetLink}" style="background:#FF6200;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Reset Password</a>
+            </div>
+            <p style="color:#888;font-size:13px;">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
+            <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+            <p style="color:#aaa;font-size:12px;">Fed Logistics — 1 Canada Square, Canary Wharf, London, UK</p>
+          </div>
+        </div>`,
+      });
+    } else {
+      console.log(`[DEV] Password reset link for ${email}: ${resetLink}`);
+    }
+    res.json({ success: true, message: 'If an account exists with this email, a reset link has been sent.' });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── RESET PASSWORD ───────────────────────────────────────────────────────────
+
+app.post('/api/auth/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) { res.status(400).json({ success: false, message: 'Token and password are required' }); return; }
+  if (password.length < 8) { res.status(400).json({ success: false, message: 'Password must be at least 8 characters' }); return; }
+  try {
+    const user = db.prepare('SELECT * FROM users WHERE reset_token = ?').get(token) as any;
+    if (!user) { res.status(400).json({ success: false, message: 'Invalid or expired reset link.' }); return; }
+    if (new Date(user.reset_token_expiry) < new Date()) {
+      res.status(400).json({ success: false, message: 'This reset link has expired. Please request a new one.' }); return;
+    }
+    const password_hash = await bcrypt.hash(password, 10);
+    db.prepare('UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?').run(password_hash, user.id);
+    res.json({ success: true, message: 'Password reset successfully. You can now log in.' });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});

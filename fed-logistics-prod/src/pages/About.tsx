@@ -134,19 +134,22 @@ export default function About() {
         </div>
       </section>
 
-      {/* Global Coverage Map Placeholder */}
-      <section className="py-20 bg-fedex-dark text-white text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Global Coverage Map */}
+      <section className="py-20 bg-fedex-dark text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Global Reach, Local Expertise</h2>
-          <p className="text-xl text-gray-300 mb-12">Operating in over 200 countries and territories worldwide.</p>
-          
-          <div className="relative w-full aspect-[2/1] bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 flex items-center justify-center">
-            {/* Placeholder for SVG Map */}
-            <Globe2 className="w-32 h-32 text-gray-600 opacity-50" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiM0ZDE0OGMiIG9wYWNpdHk9IjAuNSIvPjwvc3ZnPg==')] opacity-20"></div>
-            <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-fedex-orange rounded-full animate-ping"></div>
-            <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-fedex-orange rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-            <div className="absolute bottom-1/3 left-1/2 w-3 h-3 bg-fedex-orange rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+          <p className="text-xl text-gray-300 mb-12">Operating in over 200 countries and territories worldwide. Headquartered in London, UK.</p>
+          <div className="relative w-full rounded-2xl overflow-hidden border border-gray-700 shadow-2xl" style={{ height: '450px' }}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.2554151618!2d-0.02176902317757812!3d51.50444101011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602b9a1b4aaab%3A0x1cbfc254e61c7d0!2s1%20Canada%20Square%2C%20London%20E14%205AB%2C%20UK!5e0!3m2!1sen!2s!4v1709644800000!5m2!1sen!2s"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Fed Logistics Global HQ - London"
+            ></iframe>
           </div>
         </div>
       </section>

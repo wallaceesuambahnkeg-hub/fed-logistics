@@ -78,7 +78,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">Global Headquarters</h4>
-                    <p className="text-gray-600 mt-1">942 South Shady Grove Road<br/>Memphis, TN 38120<br/>United States</p>
+                    <p className="text-gray-600 mt-1">1 Canada Square, Canary Wharf<br/>London, E14 5AB<br/>United Kingdom</p>
                   </div>
                 </div>
 
@@ -88,7 +88,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">Customer Support</h4>
-                    <p className="text-gray-600 mt-1">1-800-FED-LOGS<br/>(1-800-333-5647)</p>
+                    <p className="text-gray-600 mt-1">+44 7735 380906</p>
                   </div>
                 </div>
 
@@ -209,13 +209,18 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Google Maps Placeholder */}
-        <div className="mt-16 bg-gray-200 rounded-2xl overflow-hidden h-96 relative border border-gray-300 flex items-center justify-center">
-          <div className="text-center text-gray-500">
-            <MapPin className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-xl font-semibold">Interactive Map Placeholder</p>
-            <p>Google Maps Embed would go here</p>
-          </div>
+        {/* Google Maps Embed */}
+        <div className="mt-16 rounded-2xl overflow-hidden h-96 relative border border-gray-300 shadow-sm">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.2554151618!2d-0.02176902317757812!3d51.50444101011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602b9a1b4aaab%3A0x1cbfc254e61c7d0!2s1%20Canada%20Square%2C%20London%20E14%205AB%2C%20UK!5e0!3m2!1sen!2s!4v1709644800000!5m2!1sen!2s"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Fed Logistics Headquarters - Canary Wharf, London"
+          ></iframe>
         </div>
 
       </div>

@@ -39,7 +39,7 @@ export default function Home() {
     <div className="w-full">
       {/* Hero Section */}
       <section className="relative bg-fedex-purple text-white pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8ed7c80a30?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-[url('https://bidmoncorp.com/images/about-hero.jpg')] bg-cover bg-center"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-fedex-purple via-fedex-purple/90 to-transparent z-10"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">

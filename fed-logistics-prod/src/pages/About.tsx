@@ -1,158 +1,56 @@
-import { motion } from 'motion/react';
-import { Target, Heart, Shield, Users, Globe2, Award } from 'lucide-react';
+import { Target, Heart, Shield, Users, Globe2, Award } from 'lucide-react'
 
 export default function About() {
-  const values = [
-    { icon: <Target className="w-8 h-8 text-fedex-orange" />, title: 'Mission', desc: 'To connect people and possibilities through innovative, reliable logistics solutions.' },
-    { icon: <Heart className="w-8 h-8 text-fedex-orange" />, title: 'Customer First', desc: 'We prioritize our customers\' needs, ensuring every package is handled with care.' },
-    { icon: <Shield className="w-8 h-8 text-fedex-orange" />, title: 'Integrity', desc: 'We operate with transparency, honesty, and a commitment to ethical business practices.' },
-    { icon: <Users className="w-8 h-8 text-fedex-orange" />, title: 'Teamwork', desc: 'Our diverse global team collaborates to deliver exceptional results every day.' },
-    { icon: <Globe2 className="w-8 h-8 text-fedex-orange" />, title: 'Sustainability', desc: 'We are dedicated to reducing our environmental impact and promoting green logistics.' },
-    { icon: <Award className="w-8 h-8 text-fedex-orange" />, title: 'Excellence', desc: 'We strive for continuous improvement and operational excellence in all we do.' },
-  ];
-
-  const team = [
-    { name: 'David Reynolds', role: 'Chief Executive Officer', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop' },
-    { name: 'Sarah Jenkins', role: 'Chief Operations Officer', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop' },
-    { name: 'Michael Chen', role: 'Head of Global Logistics', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=800&auto=format&fit=crop' },
-    { name: 'Elena Rodriguez', role: 'VP of Customer Experience', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop' },
-  ];
-
   return (
     <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative bg-fedex-dark text-white pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-fedex-dark via-fedex-dark/80 to-transparent z-10"></div>
-        
-        <div className="max-w-7xl mx-auto relative z-20">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="max-w-2xl"
-          >
-            <h1 className="text-4xl md:text-5xl font-heading font-bold mb-6">
-              Delivering More Than Packages
-            </h1>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              Since our founding, Fed Logistics has been committed to connecting the world through fast, reliable, and innovative shipping solutions. We don't just move boxes; we move businesses forward.
-            </p>
-          </motion.div>
+      <section className="relative bg-fl-purple text-white pt-32 pb-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 opacity-40 bg-cover bg-center" style={{ backgroundImage: "url('https://bidmoncorp.com/images/about-hero.jpg')" }}></div>
+        <div className="absolute inset-0 bg-fl-purple/70"></div>
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">Delivering More Than Packages</h1>
+          <p className="text-xl text-gray-200">Since our founding, Fed Logistics has connected the world through fast, reliable and innovative shipping solutions.</p>
         </div>
       </section>
 
-      {/* Our Story */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-fedex-dark mb-6">Our Story</h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                What started as a small regional courier service has grown into a global logistics powerhouse. For over 40 years, Fed Logistics has pioneered new ways to move goods faster, safer, and more efficiently.
-              </p>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Today, our network spans over 200 countries and territories, powered by a dedicated team of over 500,000 employees worldwide. We leverage cutting-edge technology and a massive fleet of aircraft and vehicles to ensure your promises are kept.
-              </p>
-              <div className="bg-orange-50 p-6 rounded-xl border-l-4 border-fedex-orange">
-                <p className="text-fedex-dark font-semibold italic">
-                  "Our success is built on a simple premise: when we deliver for our customers, we deliver for the world."
-                </p>
-              </div>
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=2070&auto=format&fit=crop" alt="Fed Logistics History" className="rounded-2xl shadow-2xl object-cover h-[500px] w-full" />
-            </motion.div>
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-3xl font-heading font-bold text-fl-dark mb-4">Our Story</h2>
+            <p className="text-gray-600 mb-4 leading-relaxed">What started as a small regional courier service has grown into a global logistics powerhouse. For over 40 years, Fed Logistics has pioneered new ways to move goods faster, safer and more efficiently.</p>
+            <p className="text-gray-600 leading-relaxed">Today our network spans over 200 countries, powered by a dedicated team of over 500,000 employees worldwide — headquartered in London, UK.</p>
           </div>
+          <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800" alt="Fed Logistics" className="rounded-2xl shadow-xl object-cover h-80 w-full" />
         </div>
       </section>
 
-      {/* Core Values */}
-      <section className="py-20 bg-fedex-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-fedex-dark mb-4">Our Core Values</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">The principles that guide our decisions and shape our culture every single day.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {values.map((val, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow"
-              >
-                <div className="inline-flex items-center justify-center bg-orange-50 w-16 h-16 rounded-full mb-6">
-                  {val.icon}
-                </div>
-                <h3 className="text-xl font-bold text-fedex-dark mb-3">{val.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{val.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+      <section className="py-20 px-4 bg-fl-light">
+        <div className="max-w-5xl mx-auto text-center mb-12">
+          <h2 className="text-3xl font-heading font-bold text-fl-dark mb-3">Our Core Values</h2>
+        </div>
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { icon: <Target className="w-7 h-7 text-fl-orange" />, title: 'Mission', desc: 'To connect people through innovative, reliable logistics solutions.' },
+            { icon: <Shield className="w-7 h-7 text-fl-orange" />, title: 'Integrity', desc: 'Transparency and honesty in every interaction.' },
+            { icon: <Globe2 className="w-7 h-7 text-fl-orange" />, title: 'Global Reach', desc: 'Operating in 200+ countries from our London HQ.' },
+          ].map(v => (
+            <div key={v.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-orange-50 rounded-full mb-4">{v.icon}</div>
+              <h3 className="font-bold text-fl-dark mb-2">{v.title}</h3>
+              <p className="text-sm text-gray-500">{v.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Leadership Team */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-fedex-dark mb-4">Leadership Team</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">Meet the experts driving our vision forward.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="relative overflow-hidden rounded-2xl mb-4 aspect-[3/4]">
-                  <img src={member.image} alt={member.name} className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <h3 className="text-xl font-bold text-fedex-dark">{member.name}</h3>
-                <p className="text-fedex-orange font-medium">{member.role}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Global Coverage Map */}
-      <section className="py-20 bg-fedex-dark text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Global Reach, Local Expertise</h2>
-          <p className="text-xl text-gray-300 mb-12">Operating in over 200 countries and territories worldwide. Headquartered in London, UK.</p>
-          <div className="relative w-full rounded-2xl overflow-hidden border border-gray-700 shadow-2xl" style={{ height: '450px' }}>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.2554151618!2d-0.02176902317757812!3d51.50444101011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602b9a1b4aaab%3A0x1cbfc254e61c7d0!2s1%20Canada%20Square%2C%20London%20E14%205AB%2C%20UK!5e0!3m2!1sen!2s!4v1709644800000!5m2!1sen!2s"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Fed Logistics Global HQ - London"
-            ></iframe>
+      <section className="py-16 px-4 bg-fl-purple text-white">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-heading font-bold mb-4">Global Reach, London Heart</h2>
+          <p className="text-gray-200 mb-8">Our headquarters at Canary Wharf, London — serving the world.</p>
+          <div className="rounded-2xl overflow-hidden h-80 border border-white/20">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.2554151618!2d-0.02176902317757812!3d51.50444101011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602b9a1b4aaab%3A0x1cbfc254e61c7d0!2s1%20Canada%20Square%2C%20London%20E14%205AB!5e0!3m2!1sen!2suk!4v1709644800000!5m2!1sen!2suk" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" title="HQ Map"></iframe>
           </div>
         </div>
       </section>
     </div>
-  );
+  )
 }

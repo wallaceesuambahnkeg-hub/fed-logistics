@@ -24,6 +24,9 @@ app.use(express.json());
 
 interface AuthRequest extends Request {
   user?: { id: number; email: string; name: string };
+  // include common properties to keep TypeScript happy
+  headers?: any;
+  body?: any;
 }
 
 // ─── Middleware ───────────────────────────────────────────────────────────────

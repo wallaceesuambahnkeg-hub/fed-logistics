@@ -12,12 +12,22 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@fedlogistics.com';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isLoggedIn } = useAuth();
   return isLoggedIn ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { isLoggedIn, user } = useAuth();
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+  if (user?.email !== ADMIN_EMAIL) return <Navigate to="/" replace />;
+  return <>{children}</>;
 }
 
 function AppRoutes() {
@@ -34,9 +44,10 @@ function AppRoutes() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         </Routes>
       </main>
       <Footer />

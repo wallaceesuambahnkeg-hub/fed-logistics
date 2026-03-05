@@ -430,3 +430,104 @@ app.post('/api/auth/reset-password', async (req, res) => {
     res.json({ success: true, message: 'Password reset successfully. You can now log in.' });
   } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
 });
+
+// ─── ADMIN MIDDLEWARE ─────────────────────────────────────────────────────────
+
+function requireAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@fedlogistics.com';
+  if (!req.user) { res.status(401).json({ success: false, message: 'Unauthorized' }); return; }
+  if (req.user.email !== adminEmail) { res.status(403).json({ success: false, message: 'Admin access required' }); return; }
+  next();
+}
+
+// ─── ADMIN: Get dashboard stats ───────────────────────────────────────────────
+
+app.get('/api/admin/stats', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  try {
+    const totalShipments = (db.prepare('SELECT COUNT(*) as c FROM shipments').get() as any).c;
+    const totalUsers = (db.prepare('SELECT COUNT(*) as c FROM users').get() as any).c;
+    const totalMessages = (db.prepare('SELECT COUNT(*) as c FROM contact_messages').get() as any).c;
+    const inTransit = (db.prepare("SELECT COUNT(*) as c FROM shipments WHERE status = 'In Transit'").get() as any).c;
+    const delivered = (db.prepare("SELECT COUNT(*) as c FROM shipments WHERE status = 'Delivered'").get() as any).c;
+    const pending = (db.prepare("SELECT COUNT(*) as c FROM shipments WHERE status = 'Order Created' OR status = 'Picked Up'").get() as any).c;
+    const revenue = (db.prepare('SELECT SUM(price) as total FROM shipments').get() as any).total || 0;
+    res.json({ success: true, stats: { totalShipments, totalUsers, totalMessages, inTransit, delivered, pending, revenue: revenue.toFixed(2) } });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── ADMIN: Get all shipments ─────────────────────────────────────────────────
+
+app.get('/api/admin/shipments', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  try {
+    const shipments = db.prepare(`
+      SELECT s.*, u.name as user_name, u.email as user_email
+      FROM shipments s LEFT JOIN users u ON s.user_id = u.id
+      ORDER BY s.created_at DESC
+    `).all() as any[];
+    const result = shipments.map(s => ({
+      ...s,
+      history: (db.prepare('SELECT * FROM tracking_history WHERE shipment_id = ? ORDER BY id ASC').all(s.id) as any[]).map((h: any) => ({ id: h.id, status: h.status, location: h.location, date: h.date, completed: h.completed === 1 })),
+    }));
+    res.json({ success: true, shipments: result });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── ADMIN: Update shipment status ───────────────────────────────────────────
+
+app.put('/api/admin/shipments/:id/status', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  const { id } = req.params;
+  const { status, location } = req.body;
+  if (!status) { res.status(400).json({ success: false, message: 'Status is required' }); return; }
+  const validStatuses = ['Order Created', 'Picked Up', 'In Transit', 'Out for Delivery', 'Delivered'];
+  if (!validStatuses.includes(status)) { res.status(400).json({ success: false, message: 'Invalid status' }); return; }
+  try {
+    const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id) as any;
+    if (!shipment) { res.status(404).json({ success: false, message: 'Shipment not found' }); return; }
+    // Update shipment status
+    db.prepare('UPDATE shipments SET status = ? WHERE id = ?').run(status, id);
+    // Update tracking history — mark all steps up to current as completed
+    const stepIndex = validStatuses.indexOf(status);
+    const historySteps = db.prepare('SELECT * FROM tracking_history WHERE shipment_id = ? ORDER BY id ASC').all(id) as any[];
+    const now = new Date().toLocaleString();
+    db.transaction(() => {
+      historySteps.forEach((step: any, i: number) => {
+        if (i <= stepIndex) {
+          db.prepare('UPDATE tracking_history SET completed = 1, location = ?, date = ? WHERE id = ?')
+            .run(i === stepIndex ? (location || step.location || shipment.destination) : step.location, i === stepIndex ? now : (step.date || now), step.id);
+        } else {
+          db.prepare('UPDATE tracking_history SET completed = 0 WHERE id = ?').run(step.id);
+        }
+      });
+    })();
+    res.json({ success: true, message: `Shipment updated to "${status}"` });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── ADMIN: Get all users ─────────────────────────────────────────────────────
+
+app.get('/api/admin/users', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  try {
+    const users = db.prepare('SELECT id, name, email, created_at FROM users ORDER BY created_at DESC').all();
+    res.json({ success: true, users });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── ADMIN: Get all contact messages ─────────────────────────────────────────
+
+app.get('/api/admin/messages', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  try {
+    const messages = db.prepare('SELECT * FROM contact_messages ORDER BY created_at DESC').all();
+    res.json({ success: true, messages });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});
+
+// ─── ADMIN: Delete a shipment ─────────────────────────────────────────────────
+
+app.delete('/api/admin/shipments/:id', authenticateToken, requireAdmin, (req: AuthRequest, res) => {
+  const { id } = req.params;
+  try {
+    db.prepare('DELETE FROM tracking_history WHERE shipment_id = ?').run(id);
+    db.prepare('DELETE FROM shipments WHERE id = ?').run(id);
+    res.json({ success: true, message: 'Shipment deleted' });
+  } catch (err) { console.error(err); res.status(500).json({ success: false, message: 'Server error' }); }
+});

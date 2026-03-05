@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-fedex-purple: #4D148C;
+  --color-fedex-orange: #FF6200;
+  --color-fedex-dark: #1a1a2e;
+  --color-fedex-light: #f8f8f8;
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-fedex-light;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-fedex-dark;
+  }
+}

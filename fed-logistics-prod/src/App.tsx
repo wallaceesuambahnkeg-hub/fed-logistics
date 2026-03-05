@@ -28,7 +28,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/track" element={<Track />} />
-          <Route path="/ship" element={<PrivateRoute><Ship /></PrivateRoute>} />
+          <Route path="/ship" element={<Ship />} />
           <Route path="/services" element={<Services />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

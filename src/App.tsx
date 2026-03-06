@@ -15,6 +15,8 @@ import Dashboard from './pages/Dashboard'
 import Admin from './pages/Admin'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import Capabilities from './pages/Capabilities'
+import Quote from './pages/Quote'
 
 const ADMIN_EMAIL = (import.meta as any).env?.VITE_ADMIN_EMAIL || 'wallaceesuambahnkeg@gmail.com'
 
@@ -42,6 +44,8 @@ function Layout() {
           <Route path="/services" element={<Services />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/capabilities" element={<Capabilities />} />
+          <Route path="/quote" element={<Quote />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />

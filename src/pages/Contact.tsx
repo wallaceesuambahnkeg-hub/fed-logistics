@@ -17,52 +17,92 @@ export default function Contact() {
   }
 
   return (
-    <div className="bg-fl-light min-h-screen pt-24 pb-16 px-4">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-heading font-bold text-fl-dark mb-3">Get in Touch</h1>
-          <p className="text-gray-500 max-w-xl mx-auto">Have a question or need help with a shipment? We're here to help.</p>
+    <div className="w-full">
+      {/* Hero */}
+      <section className="relative text-white pt-32 pb-20 px-4 overflow-hidden min-h-[320px] flex items-center">
+        <img src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?q=80&w=1920&auto=format&fit=crop" alt="Contact" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-fl-purple/90"></div>
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <p className="text-fl-orange font-bold text-sm uppercase tracking-widest mb-3">Get In Touch</p>
+          <h1 className="text-5xl font-heading font-black mb-4">Contact Us</h1>
+          <p className="text-xl text-gray-200">Our team responds within 2–4 business hours. For urgent matters, call us directly.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      </section>
+
+      <div className="bg-fl-light py-20 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* Contact Info */}
           <div className="space-y-5">
-            {[
-              { icon: <MapPin className="w-5 h-5 text-fl-orange" />, title: 'Headquarters', text: '1 Canada Square\nCanary Wharf, London\nE14 5AB, UK' },
-              { icon: <Phone className="w-5 h-5 text-fl-orange" />, title: 'Phone', text: '+44 7735 380906' },
-              { icon: <Mail className="w-5 h-5 text-fl-orange" />, title: 'Email', text: 'support@fedlogistics.com' },
-              { icon: <Clock className="w-5 h-5 text-fl-orange" />, title: 'Hours', text: 'Mon–Fri: 8am–8pm\nSat: 9am–5pm' },
-            ].map(i => (
-              <div key={i.title} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-start gap-4">
-                <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0">{i.icon}</div>
-                <div><p className="font-bold text-gray-800 text-sm">{i.title}</p><p className="text-gray-500 text-sm mt-0.5 whitespace-pre-line">{i.text}</p></div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h3 className="font-heading font-black text-fl-dark text-lg mb-4">Head Office</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><MapPin className="w-4 h-4 text-fl-orange" /></div>
+                  <div><p className="font-bold text-gray-800 text-sm">Address</p><p className="text-gray-500 text-sm">1 Canada Square, Canary Wharf<br />London, E14 5AB, UK</p></div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><Phone className="w-4 h-4 text-fl-orange" /></div>
+                  <div><p className="font-bold text-gray-800 text-sm">Phone</p><a href="tel:+447735380906" className="text-gray-500 text-sm hover:text-fl-orange">+44 7735 380906</a></div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><Mail className="w-4 h-4 text-fl-orange" /></div>
+                  <div><p className="font-bold text-gray-800 text-sm">Email</p><p className="text-gray-500 text-sm">info@fedlogisticscorp.com</p><p className="text-gray-500 text-sm">support@fedlogisticscorp.com</p></div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0"><Clock className="w-4 h-4 text-fl-orange" /></div>
+                  <div><p className="font-bold text-gray-800 text-sm">Hours</p><p className="text-gray-500 text-sm">Mon–Fri: 8am–8pm GMT<br />Sat: 9am–5pm GMT</p></div>
+                </div>
               </div>
-            ))}
+            </div>
+
+            <div className="bg-fl-purple rounded-2xl p-6 text-white">
+              <h3 className="font-bold text-lg mb-2">Urgent Shipment?</h3>
+              <p className="text-purple-200 text-sm mb-4">Call us directly for same-day and emergency freight arrangements.</p>
+              <a href="tel:+447735380906" className="block w-full bg-fl-orange hover:bg-orange-500 text-white text-center py-3 rounded-xl font-bold transition">📞 Call Now</a>
+            </div>
+
+            <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+              <h3 className="font-bold text-fl-dark mb-3 text-sm">Response Times</h3>
+              <div className="space-y-2 text-sm">
+                {[['General Enquiry', '2–4 hours'], ['Quote Request', '1–2 hours'], ['Urgent Freight', '30 minutes'], ['Technical Support', '1 hour']].map(([t, r]) => (
+                  <div key={t} className="flex justify-between"><span className="text-gray-500">{t}</span><span className="font-bold text-fl-orange">{r}</span></div>
+                ))}
+              </div>
+            </div>
           </div>
 
+          {/* Form */}
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <h2 className="text-xl font-bold text-fl-dark mb-6">Send a Message</h2>
-            {status === 'success' && <div className="flex items-center gap-3 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-5"><CheckCircle className="w-5 h-5 text-green-500" /><p className="text-green-700 text-sm font-medium">Message sent! We'll get back to you soon.</p></div>}
-            {status === 'error' && <div className="flex items-center gap-3 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-5"><AlertCircle className="w-5 h-5 text-red-500" /><p className="text-red-700 text-sm">Something went wrong. Please try again.</p></div>}
+            <h2 className="text-2xl font-heading font-black text-fl-dark mb-2">Send a Message</h2>
+            <p className="text-gray-500 text-sm mb-6">Fill in the form and our team will get back to you promptly.</p>
+
+            {status === 'success' && <div className="flex items-center gap-3 bg-green-50 border-l-4 border-green-500 p-4 rounded-lg mb-6"><CheckCircle className="w-5 h-5 text-green-500" /><p className="text-green-700 text-sm font-medium">Message sent! We'll get back to you within 2–4 hours.</p></div>}
+            {status === 'error' && <div className="flex items-center gap-3 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6"><AlertCircle className="w-5 h-5 text-red-500" /><p className="text-red-700 text-sm">Something went wrong. Please try again or call us directly.</p></div>}
+
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Name</label><input type="text" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="John Doe" className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition" /></div>
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Email</label><input type="email" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition" /></div>
+                <div><label className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label><input type="text" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="John Doe" className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition" /></div>
+                <div><label className="block text-sm font-bold text-gray-700 mb-2">Email Address *</label><input type="email" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@example.com" className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition" /></div>
               </div>
-              <div><label className="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Subject *</label>
                 <select required value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white outline-none focus:ring-2 focus:ring-fl-orange transition">
                   <option value="">Select a subject</option>
-                  <option>Tracking Issue</option><option>Request a Quote</option><option>Billing Inquiry</option><option>General Support</option><option>Other</option>
+                  <option>Request a Quote</option><option>Air Freight Enquiry</option><option>Sea Freight Enquiry</option><option>Cargo Transport Enquiry</option><option>Warehousing Enquiry</option><option>Tracking Issue</option><option>Government Contract Enquiry</option><option>General Support</option>
                 </select>
               </div>
-              <div><label className="block text-sm font-semibold text-gray-700 mb-2">Message</label><textarea required rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="How can we help you?" className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition resize-none"></textarea></div>
-              <button type="submit" disabled={loading} className="bg-fl-purple hover:bg-purple-900 text-white px-8 py-3 rounded-xl font-bold transition disabled:opacity-60 flex items-center gap-2">
-                {loading ? 'Sending...' : <><Send className="w-4 h-4" /> Send Message</>}
+              <div><label className="block text-sm font-bold text-gray-700 mb-2">Message *</label><textarea required rows={6} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} placeholder="Tell us about your logistics needs..." className="w-full px-4 py-3 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-fl-orange transition resize-none"></textarea></div>
+              <button type="submit" disabled={loading} className="w-full bg-fl-purple hover:bg-purple-900 text-white py-4 rounded-xl font-bold transition disabled:opacity-60 flex items-center justify-center gap-2 text-base">
+                {loading ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span> : <Send className="w-4 h-4" />}
+                {loading ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>
         </div>
 
         {/* Map */}
-        <div className="mt-10 rounded-2xl overflow-hidden shadow-sm border border-gray-200 h-80">
+        <div className="max-w-6xl mx-auto mt-8 rounded-2xl overflow-hidden shadow-sm border border-gray-200 h-80">
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.2554151618!2d-0.02176902317757812!3d51.50444101011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487602b9a1b4aaab%3A0x1cbfc254e61c7d0!2s1%20Canada%20Square%2C%20London%20E14%205AB!5e0!3m2!1sen!2suk!4v1709644800000!5m2!1sen!2suk" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" title="Fed Logistics HQ"></iframe>
         </div>
       </div>

@@ -7,7 +7,7 @@ export default function About() {
 
       {/* HERO with real image */}
       <section className="relative min-h-[560px] flex items-center overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=2070&auto=format&fit=crop" alt="About Fed Logistics" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://picsum.photos/id/1072/800/600" alt="About Fed Logistics" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
         <div className="relative z-10 max-w-5xl mx-auto px-4 pt-32 pb-20">
           <p className="text-fl-orange font-bold text-sm uppercase tracking-widest mb-3">About Us</p>
@@ -22,7 +22,7 @@ export default function About() {
       <section className="py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=900&auto=format&fit=crop&crop=top" alt="David Harrington, Founder of Fed Logistics" className="rounded-2xl shadow-2xl w-full h-[520px] object-cover object-top" />
+            <img src="https://picsum.photos/id/453/900/600" alt="David Harrington, Founder of Fed Logistics" className="rounded-2xl shadow-2xl w-full h-[520px] object-cover object-top" />
             <div className="absolute -bottom-5 -left-5 bg-fl-orange text-white rounded-2xl p-5 shadow-xl hidden md:block">
               <p className="text-4xl font-black leading-none">2009</p>
               <p className="text-orange-100 text-sm mt-1">Year Founded</p>
@@ -106,9 +106,9 @@ export default function About() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop&crop=top', name: 'David Harrington', role: 'Founder & CEO', bio: 'Former military logistics officer with 8 years of service. Built Fed Logistics from the ground up with a mission to bring military-grade reliability to commercial and government logistics.' },
-              { img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600&auto=format&fit=crop&crop=top', name: 'Angela Osei', role: 'Chief Operations Officer', bio: 'Expert in federal procurement and supply chain optimisation with 12 years experience. Leads all operational delivery and manages key government client accounts.' },
-              { img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop&crop=top', name: 'Daniel Kofi', role: 'Head of Government Contracts', bio: 'Specialist in federal contracting, NAICS classification and government procurement. Manages all public sector partnerships and compliance for US and UK government clients.' },
+              { img: 'https://picsum.photos/id/453/900/600', name: 'David Harrington', role: 'Founder & CEO', bio: 'Former military logistics officer with 8 years of service. Built Fed Logistics from the ground up with a mission to bring military-grade reliability to commercial and government logistics.' },
+              { img: 'https://randomuser.me/api/portraits/women/28.jpg', name: 'Angela Osei', role: 'Chief Operations Officer', bio: 'Expert in federal procurement and supply chain optimisation with 12 years experience. Leads all operational delivery and manages key government client accounts.' },
+              { img: 'https://randomuser.me/api/portraits/men/45.jpg', name: 'Daniel Kofi', role: 'Head of Government Contracts', bio: 'Specialist in federal contracting, NAICS classification and government procurement. Manages all public sector partnerships and compliance for US and UK government clients.' },
             ].map(l => (
               <div key={l.name} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg transition group">
                 <div className="h-64 overflow-hidden">
@@ -134,9 +134,9 @@ export default function About() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'Michael Turner', role: 'Texas, USA', quote: 'Fast and reliable delivery service. Fed Logistics handled our entire federal supply contract without a single missed deadline.' },
-              { img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'Sarah Mitchell', role: 'London, UK', quote: 'Their air freight service is exceptional. Real-time tracking and 24/7 support give us complete peace of mind for our time-sensitive medical shipments.' },
-              { img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'James Okafor', role: 'Washington DC, USA', quote: "Switched our agency's logistics to Fed Logistics 2 years ago. Our delivery success rate jumped from 94% to 99.8%. Exceptional service." },
+              { img: 'https://randomuser.me/api/portraits/men/32.jpg', name: 'Michael Turner', role: 'Texas, USA', quote: 'Fast and reliable delivery service. Fed Logistics handled our entire federal supply contract without a single missed deadline.' },
+              { img: 'https://randomuser.me/api/portraits/women/44.jpg', name: 'Sarah Mitchell', role: 'London, UK', quote: 'Their air freight service is exceptional. Real-time tracking and 24/7 support give us complete peace of mind for our time-sensitive medical shipments.' },
+              { img: 'https://randomuser.me/api/portraits/men/68.jpg', name: 'James Okafor', role: 'Washington DC, USA', quote: "Switched our agency's logistics to Fed Logistics 2 years ago. Our delivery success rate jumped from 94% to 99.8%. Exceptional service." },
             ].map(t => (
               <div key={t.name} className="bg-white/10 border border-white/20 rounded-2xl p-6">
                 <div className="flex gap-1 mb-4">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-fl-orange text-fl-orange" />)}</div>
@@ -171,7 +171,7 @@ export default function About() {
 
       {/* CTA */}
       <section className="relative py-20 px-4 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=1920&auto=format&fit=crop" alt="CTA background" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+        <img src="https://picsum.photos/id/870/1920/600" alt="CTA background" className="absolute inset-0 w-full h-full object-cover opacity-20" />
         <div className="absolute inset-0 bg-fl-purple"></div>
         <div className="relative z-10 max-w-2xl mx-auto text-center text-white">
           <h2 className="text-4xl font-heading font-black mb-4">Ready to Partner With Us?</h2>

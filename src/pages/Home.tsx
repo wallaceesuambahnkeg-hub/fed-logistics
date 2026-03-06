@@ -12,7 +12,7 @@ export default function Home() {
 
       {/* HERO - full viewport with real logistics image */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        <img src="https://picsum.photos/id/1048/1920/1000" alt="Fed Logistics warehouse operations" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop" alt="Fed Logistics warehouse operations" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40"></div>
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-32">
           <div className="flex flex-col lg:flex-row items-center gap-14">
@@ -68,10 +68,10 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { img: 'https://picsum.photos/id/137/800/600', emoji: '✈️', title: 'Air Freight', desc: 'Fast worldwide air cargo with customs clearance and door-to-door tracking.', link: '/services#air' },
-              { img: 'https://picsum.photos/id/1072/800/600', emoji: '🚢', title: 'Sea Freight', desc: 'Cost-effective FCL & LCL ocean freight to any major port worldwide.', link: '/services#sea' },
-              { img: 'https://picsum.photos/id/111/800/600', emoji: '🚛', title: 'Cargo Transport', desc: 'FTL & LTL ground freight across the USA and UK with GPS tracking.', link: '/services#cargo' },
-              { img: 'https://picsum.photos/id/1033/800/600', emoji: '🏭', title: 'Warehousing', desc: 'Secure storage, pick-and-pack and fulfilment in key logistics hubs.', link: '/services#warehouse' },
+              { img: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=800&auto=format&fit=crop', emoji: '✈️', title: 'Air Freight', desc: 'Fast worldwide air cargo with customs clearance and door-to-door tracking.', link: '/services#air' },
+              { img: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=800&auto=format&fit=crop', emoji: '🚢', title: 'Sea Freight', desc: 'Cost-effective FCL & LCL ocean freight to any major port worldwide.', link: '/services#sea' },
+              { img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=800&auto=format&fit=crop', emoji: '🚛', title: 'Cargo Transport', desc: 'FTL & LTL ground freight across the USA and UK with GPS tracking.', link: '/services#cargo' },
+              { img: 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=800&auto=format&fit=crop', emoji: '🏭', title: 'Warehousing', desc: 'Secure storage, pick-and-pack and fulfilment in key logistics hubs.', link: '/services#warehouse' },
             ].map(s => (
               <Link to={s.link} key={s.title} className="group rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <div className="relative h-52 overflow-hidden">
@@ -97,7 +97,7 @@ export default function Home() {
       <section className="py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
-            <img src="https://picsum.photos/id/453/900/600" alt="Fed Logistics operations team" className="rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
+            <img src="https://images.unsplash.com/photo-1524508762098-b9bcda6c68ae?q=80&w=900&auto=format&fit=crop" alt="Fed Logistics operations team" className="rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
             <div className="absolute -bottom-6 -right-4 bg-fl-purple text-white rounded-2xl p-5 shadow-2xl hidden md:block">
               <p className="text-5xl font-black text-fl-orange leading-none">15+</p>
               <p className="text-purple-200 text-sm font-semibold mt-1">Years of Excellence</p>
@@ -134,9 +134,9 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { img: 'https://randomuser.me/api/portraits/men/32.jpg', name: 'Michael Turner', role: 'Supply Chain Director, Texas', stars: 5, quote: 'Fast and reliable delivery service. Fed Logistics handled our entire federal supply contract without a single missed deadline. Highly recommended for any government work.' },
-              { img: 'https://randomuser.me/api/portraits/women/44.jpg', name: 'Sarah Mitchell', role: 'Operations Manager, MedTech Corp', stars: 5, quote: 'We ship time-sensitive medical equipment globally. Their air freight service is exceptional — real-time tracking and 24/7 support give us complete peace of mind every time.' },
-              { img: 'https://randomuser.me/api/portraits/men/68.jpg', name: 'James Okafor', role: 'Procurement Officer, Washington DC', stars: 5, quote: "Switched our agency's logistics to Fed Logistics 2 years ago. Warehousing and cargo transport are top tier. Our delivery success rate jumped from 94% to 99.8%." },
+              { img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'Michael Turner', role: 'Supply Chain Director, Texas', stars: 5, quote: 'Fast and reliable delivery service. Fed Logistics handled our entire federal supply contract without a single missed deadline. Highly recommended for any government work.' },
+              { img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'Sarah Mitchell', role: 'Operations Manager, MedTech Corp', stars: 5, quote: 'We ship time-sensitive medical equipment globally. Their air freight service is exceptional — real-time tracking and 24/7 support give us complete peace of mind every time.' },
+              { img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop&crop=face', name: 'James Okafor', role: 'Procurement Officer, Washington DC', stars: 5, quote: "Switched our agency's logistics to Fed Logistics 2 years ago. Warehousing and cargo transport are top tier. Our delivery success rate jumped from 94% to 99.8%." },
             ].map(t => (
               <div key={t.name} className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-7 flex flex-col">
                 <div className="flex gap-1 mb-5">{[...Array(t.stars)].map((_, i) => <Star key={i} className="w-4 h-4 fill-fl-orange text-fl-orange" />)}</div>
@@ -199,7 +199,7 @@ export default function Home() {
 
       {/* FINAL CTA */}
       <section className="relative py-24 px-4 overflow-hidden text-white text-center">
-        <img src="https://picsum.photos/id/1072/1920/600" alt="Ready to ship" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+        <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1920&auto=format&fit=crop" alt="Ready to ship" className="absolute inset-0 w-full h-full object-cover opacity-20" />
         <div className="absolute inset-0 bg-fl-orange"></div>
         <div className="relative z-10 max-w-3xl mx-auto">
           <h2 className="text-5xl font-heading font-black mb-4">Ready to Ship With Us?</h2>

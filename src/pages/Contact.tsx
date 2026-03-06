@@ -20,7 +20,7 @@ export default function Contact() {
     <div className="w-full">
       {/* Hero */}
       <section className="relative text-white pt-32 pb-20 px-4 overflow-hidden min-h-[320px] flex items-center">
-        <img src="https://picsum.photos/id/338/1920/800" alt="Contact" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <img src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?q=80&w=1920&auto=format&fit=crop" alt="Contact" className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="absolute inset-0 bg-fl-purple/90"></div>
         <div className="relative z-10 max-w-4xl mx-auto">
           <p className="text-fl-orange font-bold text-sm uppercase tracking-widest mb-3">Get In Touch</p>

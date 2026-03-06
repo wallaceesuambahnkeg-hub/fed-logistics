@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const services = [
   {
     id: 'air',
-    img: 'https://picsum.photos/id/137/800/600',
+    img: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1200&auto=format&fit=crop',
     emoji: '✈️',
     title: 'Air Freight',
     tagline: 'Fast. Global. Door-to-Door.',
@@ -15,7 +15,7 @@ const services = [
   },
   {
     id: 'sea',
-    img: 'https://picsum.photos/id/1072/800/600',
+    img: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200&auto=format&fit=crop',
     emoji: '🚢',
     title: 'Sea Freight',
     tagline: 'Cost-Effective. High Volume. Worldwide.',
@@ -26,7 +26,7 @@ const services = [
   },
   {
     id: 'cargo',
-    img: 'https://picsum.photos/id/111/800/600',
+    img: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=1200&auto=format&fit=crop',
     emoji: '🚛',
     title: 'Cargo Transport',
     tagline: 'Ground Freight. USA & UK.',
@@ -37,7 +37,7 @@ const services = [
   },
   {
     id: 'warehouse',
-    img: 'https://picsum.photos/id/1033/800/600',
+    img: 'https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop',
     emoji: '🏭',
     title: 'Warehousing & Storage',
     tagline: 'Secure. Flexible. Strategically Located.',
@@ -48,7 +48,7 @@ const services = [
   },
   {
     id: 'supply-chain',
-    img: 'https://picsum.photos/id/870/1920/800',
+    img: 'https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=1200&auto=format&fit=crop',
     emoji: '🔗',
     title: 'Supply Chain Management',
     tagline: 'End-to-End Visibility & Control.',
@@ -59,7 +59,7 @@ const services = [
   },
   {
     id: 'secure',
-    img: 'https://picsum.photos/id/225/800/600',
+    img: 'https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=1200&auto=format&fit=crop',
     emoji: '🛡️',
     title: 'Secure & Insured Freight',
     tagline: 'High-Value. Sensitive. Classified.',
@@ -76,7 +76,7 @@ export default function Services() {
 
       {/* HERO with image */}
       <section className="relative min-h-[450px] flex items-center overflow-hidden">
-        <img src="https://picsum.photos/id/1048/1920/1000" alt="Fed Logistics services" className="absolute inset-0 w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop" alt="Fed Logistics services" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
         <div className="relative z-10 max-w-5xl mx-auto px-4 pt-32 pb-20">
           <p className="text-fl-orange font-bold text-sm uppercase tracking-widest mb-3">Our Services</p>

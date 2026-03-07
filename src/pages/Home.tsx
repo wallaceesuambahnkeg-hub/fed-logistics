@@ -97,7 +97,7 @@ export default function Home() {
       <section className="py-24 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
-            <img src="https://www.leansupplysolutions.com/wp-content/uploads/2025/02/Customer-servie-in-logistics.jpg" alt="Fed Logistics operations team" className="rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=900&auto=format&fit=crop" alt="Fed Logistics operations team" className="rounded-2xl shadow-2xl w-full h-[500px] object-cover" />
             <div className="absolute -bottom-6 -right-4 bg-fl-purple text-white rounded-2xl p-5 shadow-2xl hidden md:block">
               <p className="text-5xl font-black text-fl-orange leading-none">15+</p>
               <p className="text-purple-200 text-sm font-semibold mt-1">Years of Excellence</p>

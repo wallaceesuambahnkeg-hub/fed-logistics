@@ -2,7 +2,7 @@ import { useState, FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Package, Search, ArrowRight, CheckCircle, Star, Award, MapPin, Phone, Mail, Clock } from 'lucide-react'
 
-hexport default function Home() {
+export default function Home() {
   const [tracking, setTracking] = useState('')
   const navigate = useNavigate()
   function handleTrack(e: FormEvent) { e.preventDefault(); if (tracking.trim()) navigate(`/track?number=${tracking.trim()}`) }

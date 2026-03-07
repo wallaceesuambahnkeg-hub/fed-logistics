@@ -150,23 +150,29 @@ app.post('/api/quote', (req, res) => {
 // ─── SHIP CREATE ──────────────────────────────────────────────────────────────
 app.post('/api/ship/create', auth, (req: AuthReq, res) => {
   const { from, to, weight, service, price } = req.body
-  if (!from || !to || !weight || !service) { res.status(400).json({ success: false, message: 'All fields required' }); return }
+  if (!from || !to || !service) { res.status(400).json({ success: false, message: 'Origin, destination and service are required' }); return }
   try {
     const num = trackNum()
     const days = service === 'same-day' ? 0 : service === 'express' ? 1 : 5
     const delivery = new Date(Date.now() + days * 86400000).toISOString().split('T')[0]
-    const r = db.prepare('INSERT INTO shipments (tracking_number, user_id, status, origin, destination, weight, service, price, estimated_delivery) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(num, req.user!.id, 'Order Created', from, to, parseFloat(weight), service, parseFloat(price || '0'), delivery)
+    const safeWeight = parseFloat(weight) || 1
+    const safePrice = parseFloat(price) || 0
+    const userId = req.user!.id
+    const r = db.prepare('INSERT INTO shipments (tracking_number, user_id, status, origin, destination, weight, service, price, estimated_delivery) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(num, userId, 'Order Created', String(from), String(to), safeWeight, String(service), safePrice, delivery)
     const now = new Date().toLocaleString()
     const ins = db.prepare('INSERT INTO tracking_history (shipment_id, status, location, date, completed) VALUES (?, ?, ?, ?, ?)')
     db.transaction(() => {
-      ins.run(r.lastInsertRowid, 'Order Created', from, now, 1)
+      ins.run(r.lastInsertRowid, 'Order Created', String(from), now, 1)
       ins.run(r.lastInsertRowid, 'Picked Up', '', '', 0)
       ins.run(r.lastInsertRowid, 'In Transit', '', '', 0)
       ins.run(r.lastInsertRowid, 'Out for Delivery', '', '', 0)
       ins.run(r.lastInsertRowid, 'Delivered', '', '', 0)
     })()
     res.json({ success: true, trackingNumber: num, estimatedDelivery: delivery })
-  } catch (e) { console.error(e); res.status(500).json({ success: false, message: 'Error creating shipment' }) }
+  } catch (e: any) {
+    console.error('Ship create error:', e?.message || e)
+    res.status(500).json({ success: false, message: 'Could not create shipment. Please try again.' })
+  }
 })
 
 // ─── MY SHIPMENTS ─────────────────────────────────────────────────────────────

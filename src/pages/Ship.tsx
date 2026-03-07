@@ -264,7 +264,7 @@ export default function Ship() {
                       <span className="text-2xl font-bold text-fl-orange">${quote}</span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 bg-blue-50 p-3 rounded-lg">Demo mode — no real payment. Click Confirm to get a real tracking number.</p>
+                  <p className="text-xs text-gray-400 bg-green-50 border border-green-100 p-3 rounded-lg">✓ No payment required. Click Confirm to create your shipment and get a real tracking number.</p>
                 </div>
               )}
             </div>
